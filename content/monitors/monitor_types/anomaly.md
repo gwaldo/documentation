@@ -30,18 +30,27 @@ Anomaly detection monitors provide both "Historical Context" so that you can see
 
 Keep in mind that `anomalies` uses the past to predict what is expected in the future, so using `anomalies` on a new metric, for which you have just started collecting data, may yield poor results.
 
-Navigate to the [New Monitor](https://app.datadoghq.com/monitors#/create) page and click **Anomaly Detection**. Then fill out the **Define the metric** section just as you would for any other monitor.
+To create an anomaly detection monitor, navigate to the [New Monitor](https://app.datadoghq.com/monitors#/create) page and click **Anomaly Detection**. Then fill out the **Define the metric** section just as you would for any other monitor.
 
 {{< img src="monitors/monitor_types/anomaly/monitor_options.png" alt="monitor options" responsive="true" popup="true" style="width:80%;">}}
 
-You should now see something like what's shown above, with a handful of selections that help determine when to alert on anomalous behavior. If you only care about unusually high or unusually low values, you can choose to only alert on values above or below the bounds. The next selection determines the length of the alert window, which specifies how long a metric needs to be anomalous before an alert triggers. If the alert window is too short, you can might get false alarms due to spurious noise. Finally, the recovery period specifies for how long the metric must be normal before the alert recovers.
+You should now see the form above, with a handful of parameters that help determine when to alert on anomalous behavior. If you only care about unusually high or unusually low values, you can choose to only alert on values above or below the bounds. The next selection determines the length of the alert window, which specifies how long a metric needs to be anomalous before an alert triggers. Beware that if the alert window is too short, you might get false alarms due to spurious noise. Finally, the recovery period specifies for how long the metric must be normal before the alert recovers.
 
 Complete the rest of the steps in the New Monitor form (**Say what's happening**, etc) and click **Save** to create the Anomaly monitor.
 
 ### Advanced Options
 
-4.  [Change the anomaly detection algorithm used](/#anomaly-detetion-algorithms).
+Datadog will automatically analyze the metric you have chosen for your monitor and set several parameters for you. However, these are also available for you to edit under the advanced tab:
 
+{{< img src="monitors/monitor_types/anomaly/advanced_options.png" alt="advanced options" responsive="true" popup="true" style="width:80%;">}}
+
+Here you can specify:
+
+* The width of the gray band. This number is equivalent to the bounds parameter used in the anomalies function in dashboards.
+* [The anomaly detection algorithm used](/#anomaly-detetion-algorithms).
+* If a seasonal algorithm is chosen, the seasonality.
+* The [rollup][1].
+* The percentage of points that need to be anomalous for alerting/warning/recovery.
 
 ### Anomaly Detection Algorithms
 
@@ -158,3 +167,5 @@ We used to expose an algorithm called `adaptive` which would try to figure out a
 
 ## Further Reading
 {{< partial name="whats-next/whats-next.html" >}}
+
+[1]: graphing/#aggregate-and-rollup
