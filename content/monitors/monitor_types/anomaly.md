@@ -46,15 +46,15 @@ Datadog will automatically analyze the metric you have chosen for your monitor a
 
 Here you can specify:
 
-* The width of the gray band. This number is equivalent to the bounds parameter used in the anomalies function in dashboards.
-* [The anomaly detection algorithm used](/#anomaly-detetion-algorithms).
+* The width of the gray band. "Deviations" is equivalent to the bounds parameter used in the anomalies function in dashboards.
+* The anomaly detection algorithm used. See the [next section below](/#anomaly-detetion-algorithms).
 * If a seasonal algorithm is chosen, the seasonality.
-* The [rollup][1].
+* The [rollup][1] interval.
 * The percentage of points that need to be anomalous for alerting/warning/recovery.
 
 ### Anomaly Detection Algorithms
 
-There are four different anomaly detection algorithms:
+There are three different anomaly detection algorithms:
 
 * **Basic**: Use this algorithm for metrics that have no repeating seasonal pattern.
 *Basic* uses a simple lagging rolling quantile computation to determine the range of expected values, but it uses very little data and adjusts quickly to changing conditions but has no knowledge of seasonal behavior or longer trends.
@@ -67,7 +67,7 @@ There are four different anomaly detection algorithms:
 
 All of the seasonal algorithms may use up to a couple of months of historical data when calculating a metric's expected normal range of behavior. By using a significant amount of past data, the algorithms are able to avoid giving too much weight to abnormal behavior that might have occurred in the recent past.
 
-The figures below illustrate how and when these four algorithms behave differently from one another. In the first figure, _basic_ successfully identifies anomalies that spike out of the normal range of values, but it does not incorporate the repeating, seasonal pattern into its predicted range of values. By contrast, _robust_ and _agile_ both recognize the seasonal pattern and can detect more nuanced anomalies (e.g., if the metric was to flatline near its minimum value).
+The figures below illustrate how and when these three algorithms behave differently from one another. In the first figure, _basic_ successfully identifies anomalies that spike out of the normal range of values, but it does not incorporate the repeating, seasonal pattern into its predicted range of values. By contrast, _robust_ and _agile_ both recognize the seasonal pattern and can detect more nuanced anomalies (e.g., if the metric was to flatline near its minimum value).
 
 {{< img src="monitors/monitor_types/anomaly/alg_comparison_1.png" alt="alg comparision 1" responsive="true" popup="true" style="width:90%;">}}
 
@@ -90,20 +90,19 @@ Finally, we see how each of the algorithms handle a new metric. _Robust_ and _ag
 ## Anomaly Monitors via the API
 
 If you are an enterprise-level customer, you can create an anomaly detection monitor via the API with the standard [create-monitor API endpoint](/api/#monitor-create) if you add the `anomalies` function to the monitor query. The query then follows this formula:
-```
-time_aggr(time_window):anomalies(space_aggr:metric{tags}, 'algorithm_used', deviation_number, direction='both/above/below') >= threshold_value
-```
 
-Acceptable algorithm values are _basic_, _agile_, or _robust_.
+```
+time_aggr(eval_window_length):anomalies(space_aggr:metric{tags}, 'basic/agile/robust', deviation_number, direction='both/above/below', alert_window='alert_window_length', interval=seconds) >= threshold_value
+```
 
 **Note**: that anomaly detection monitors may only be used by enterprise-level customer subscriptions. If you have a pro-level customer subscription and would like to use the anomaly detection monitoring feature, you can reach out to your customer success representative or [email our billing team](mailto:billing@datadoghq.com) to discuss that further.
 
 ### Example
 
-If you wanted to create an anomaly detection monitor to notify you when your average Cassandra node's CPU was three standard deviations above the ordinary value for 80% of the time over the last 5 minutes, you could use the following query in your API call:
+If you wanted to create an anomaly detection monitor to notify you when your average Cassandra node's CPU was three standard deviations above the ordinary value for over the last 5 minutes, you could use the following query in your API call:
 
 ```
-avg(last_5m):anomalies(avg:system.cpu.system{name:cassandra}, 'basic', 3, direction='above') >= 0.8
+avg(last_1h):anomalies(avg:system.cpu.system{name:cassandra}, 'basic', 3, direction='above', alert_window='last_5m', interval=20) >= 1
 ```
 
 ## FAQ
