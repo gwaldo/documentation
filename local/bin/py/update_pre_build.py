@@ -405,6 +405,8 @@ class PreBuild:
                 if item[0].get('type', None):
                     item[0]['ddtype'] = item[0].get('type')
                     del item[0]['type']
+                if 'categories' in item[0] and type(item[0]['categories']) == str:
+                    item[0]['categories'] = item[0]['categories'].split(',')
                 fm = yaml.dump(item[0], default_flow_style=False).rstrip()
             else:
                 fm = {'kind': 'integration'}
