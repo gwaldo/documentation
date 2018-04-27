@@ -169,9 +169,36 @@ h1 {
   }*/
 }
 
-h2 {
-  padding-bottom: 3px;
-  line-height: 36px;
+h2{
+  color: $ddpurple;
+  font-size: 28px;
+  font-weight: 300;
+  text-transform: none;
+  margin: 30px 0 10px;
+  padding-left: 0;
+  margin-bottom: 21px;
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 5px;
+  font-family: $font-family-sans-serif;
+  font-style: normal;
+}
+
+h3{
+  font-style: normal;
+  color: #332046;
+  font-size: 22px;
+  text-transform: none;
+  font-family: $font-family-sans-serif;
+  font-style: normal;
+  }
+
+h4{
+  color: #404040;
+  font-style: normal;
+  font-family: $font-family-sans-serif;
+  font-size: 17px;
+  text-transform: none;
+  margin-bottom: 10px;
 }
 
 .col-lg-7 {
